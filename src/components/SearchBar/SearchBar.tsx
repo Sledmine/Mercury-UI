@@ -1,15 +1,9 @@
 import React from "react"
 
-import { Button, InputGroup, Intent } from "@blueprintjs/core"
+import { InputGroup } from "@blueprintjs/core"
 
 export const SearchBar = () => {
-  return (
-    <InputGroup
-      leftIcon="search"
-      placeholder="Search packages..."
-      rightElement={<Button icon="filter" intent={Intent.PRIMARY} />}
-    />
-  )
+  return <InputGroup leftIcon="search" placeholder="Search packages..." />
 }
 
 export default SearchBar

@@ -9,30 +9,32 @@ import "./App.css"
 import { NavBar } from "./components/NavBar/NavBar"
 import { SearchBar } from "./components/SearchBar/SearchBar"
 import PackagesList from "./components/PackagesList/PackagesList"
-import { os } from "@neutralinojs/lib"
 import MercuryPackage from "./types/MercuryPackage"
+import mercury from "./mercury"
+import { useSelector } from "react-redux"
+import { selectTheme } from "./redux/slices/appSlice"
 
 function App() {
+  const isDarkThemeEnabled = useSelector(selectTheme) === "dark"
   const [packages, setPackages] = React.useState([] as MercuryPackage[])
 
   useEffect(() => {
     const getPackages = async () => {
       try {
-        const { stdOut } = await os.execCommand("mercury fetch --json")
-        const data = JSON.parse(stdOut)
-        setPackages(Object.keys(data).map((key) => data[key]))
+        const packages = await mercury.fetch()
+        setPackages(packages)
       } catch (error) {
-        console.log(error)
+        console.error(error)
       }
     }
     getPackages()
   }, [])
 
   return (
-    <div className="App">
+    <div className={`App ${isDarkThemeEnabled ? "bp4-dark" : ""}`}>
       <NavBar />
       <SearchBar />
-      <PackagesList packages={packages}/>
+      <PackagesList packages={packages} />
     </div>
   )
 }
