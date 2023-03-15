@@ -18,11 +18,13 @@ export const NavBar = () => {
 
   return (
     <Navbar>
-      <NavbarGroup align={"left"}>
+      <NavbarGroup align="left">
         <NavbarHeading>Mercury UI</NavbarHeading>
         <NavbarDivider />
         <Button className={Classes.MINIMAL} icon="box" text="Install" />
         <Button className={Classes.MINIMAL} icon="list" text="Packages" />
+      </NavbarGroup>
+      <NavbarGroup align="right">
         <Button
           className={Classes.MINIMAL}
           icon={currentTheme === "light" ? "moon" : "flash"}
