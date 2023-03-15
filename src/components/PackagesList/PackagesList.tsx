@@ -29,15 +29,23 @@ export const PackagesList: React.FC<PackageListProps> = ({ packages = [] }) => {
         }}
       />
       {packages
-        .filter((pack) => {return pack.name.toLowerCase().includes(searchTerm)})
+        .filter((pack) => {
+          return pack.name.toLowerCase().includes(searchTerm)
+        })
         .map((pack) => (
           <Card key={pack.name} interactive={true}>
             <h2>
-              <Icon icon="box" size={20} />
-              <a href="#"> {pack.name}</a> <Tag>{pack.category || "misc"}</Tag>
+              <Icon icon="box" size={24} />
+              <a href="#"> {pack.name}</a>{" "}
+              {pack.category && <Tag>{pack.category}</Tag>}
             </h2>
+            <h3>Version: {pack.version}</h3>
             <p>{pack.description}</p>
-            <Button>Install</Button>
+            <div>
+              {pack.mirrors && <Button icon="cloud-download">Install</Button>}
+              {pack.files && <Button icon="refresh">Update</Button>}{" "}
+              {pack.files && <Button intent="danger" icon="delete">Remove</Button>}
+            </div>
           </Card>
         ))}
     </>

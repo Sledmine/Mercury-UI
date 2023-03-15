@@ -9,7 +9,7 @@ import {
 } from "@blueprintjs/core"
 import "./NavBar.css"
 import { useDispatch, useSelector } from "react-redux"
-import { selectTheme, setTheme } from "../../redux/slices/appSlice"
+import { selectTheme, setPage, setTheme } from "../../redux/slices/appSlice"
 
 export const NavBar = () => {
   const currentTheme = useSelector(selectTheme)
@@ -28,8 +28,18 @@ export const NavBar = () => {
       <NavbarGroup align="left">
         <NavbarHeading>Mercury UI</NavbarHeading>
         <NavbarDivider />
-        <Button className={Classes.MINIMAL} icon="box" text="Install" />
-        <Button className={Classes.MINIMAL} icon="list" text="Packages" />
+        <Button
+          className={Classes.MINIMAL}
+          onClick={() => dispatch(setPage("available"))}
+          icon="globe-network"
+          text="Available"
+        />
+        <Button
+          className={Classes.MINIMAL}
+          onClick={() => dispatch(setPage("installed"))}
+          icon="box"
+          text="Installed"
+        />
       </NavbarGroup>
       <NavbarGroup align="right">
         <Button
