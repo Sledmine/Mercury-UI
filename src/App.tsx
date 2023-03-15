@@ -1,13 +1,12 @@
 import React from "react"
 import { useEffect } from "react"
+import "./App.css"
 import "normalize.css"
 import "@blueprintjs/core/lib/css/blueprint.css"
 import "@blueprintjs/icons/lib/css/blueprint-icons.css"
 import "@blueprintjs/table/lib/css/table.css"
 import "@blueprintjs/popover2/lib/css/blueprint-popover2.css"
-import "./App.css"
 import { NavBar } from "./components/NavBar/NavBar"
-import { SearchBar } from "./components/SearchBar/SearchBar"
 import PackagesList from "./components/PackagesList/PackagesList"
 import MercuryPackage from "./types/MercuryPackage"
 import mercury from "./mercury"
@@ -33,7 +32,6 @@ function App() {
   return (
     <div className={`App ${isDarkThemeEnabled ? "bp4-dark" : ""}`}>
       <NavBar />
-      <SearchBar />
       <PackagesList packages={packages} />
     </div>
   )

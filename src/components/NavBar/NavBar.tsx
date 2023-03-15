@@ -17,7 +17,14 @@ export const NavBar = () => {
   const toggledTheme = currentTheme === "light" ? "dark" : "light"
 
   return (
-    <Navbar>
+    <Navbar
+      style={{
+        // Make this bar sticky
+        position: "sticky",
+        top: 0,
+        zIndex: 1,
+      }}
+    >
       <NavbarGroup align="left">
         <NavbarHeading>Mercury UI</NavbarHeading>
         <NavbarDivider />
