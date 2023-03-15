@@ -25,7 +25,7 @@ export const NavBar = () => {
         <Button className={Classes.MINIMAL} icon="list" text="Packages" />
         <Button
           className={Classes.MINIMAL}
-          icon="moon"
+          icon={currentTheme === "light" ? "moon" : "flash"}
           onClick={() => dispatch(setTheme(toggledTheme))}
           text={currentTheme === "light" ? "Dark Theme" : "Light Theme"}
         />
