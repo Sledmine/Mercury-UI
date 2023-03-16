@@ -13,6 +13,7 @@ import mercury from "./mercury"
 import { useDispatch, useSelector } from "react-redux"
 import {
   clearErrors,
+  pushError,
   selectErrors,
   selectIsLoading,
   selectPage,
@@ -56,7 +57,7 @@ function App() {
       } catch (error) {
         dispatch(setIsLoading(false))
         //@ts-ignore
-        setError(error.message)
+        dispatch(pushError(error.message))
       }
       dispatch(setIsLoading(false))
     }
