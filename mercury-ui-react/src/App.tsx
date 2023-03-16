@@ -10,8 +10,15 @@ import { NavBar } from "./components/NavBar/NavBar"
 import PackagesList from "./components/PackagesList/PackagesList"
 import MercuryPackage from "./types/MercuryPackage"
 import mercury from "./mercury"
-import { useSelector } from "react-redux"
-import { selectPage, selectTheme } from "./redux/slices/appSlice"
+import { useDispatch, useSelector } from "react-redux"
+import {
+  clearErrors,
+  selectErrors,
+  selectIsLoading,
+  selectPage,
+  selectTheme,
+  setIsLoading,
+} from "./redux/slices/appSlice"
 import {
   Button,
   Dialog,
@@ -22,54 +29,57 @@ import {
 } from "@blueprintjs/core"
 
 function App() {
+  const dispatch = useDispatch()
   const isDarkThemeEnabled = useSelector(selectTheme) === "dark"
-  const [isLoading, setIsLoading] = React.useState(true)
+  const darkThemeClass = isDarkThemeEnabled ? "bp4-dark" : ""
+  const isLoading = useSelector(selectIsLoading)
   const [packages, setPackages] = React.useState([] as MercuryPackage[])
   const currentPage = useSelector(selectPage)
-
-  const [error, setError] = React.useState(null as string | null)
+  const errors = useSelector(selectErrors)
 
   useEffect(() => {
     const getPackages = async () => {
       try {
+        dispatch(setIsLoading(true))
         let packages = []
         if (currentPage === "available") {
-          setIsLoading(true)
+          const installedPackages = await mercury.list()
           packages = await mercury.fetch()
-          setIsLoading(false)
+          packages = packages.filter(
+            (pack) => !installedPackages.find((p) => p.name === pack.name)
+          )
         } else {
-          setIsLoading(true)
           packages = await mercury.list()
-          setIsLoading(false)
         }
         setPackages(packages)
       } catch (error) {
-        setIsLoading(false)
+        dispatch(setIsLoading(false))
         //@ts-ignore
         setError(error.message)
       }
+      dispatch(setIsLoading(false))
     }
     getPackages()
   }, [currentPage])
 
   return (
-    <div className={`App ${isDarkThemeEnabled ? "bp4-dark" : ""}`}>
+    <div className={`App ${darkThemeClass}`}>
       <Dialog
-        className="bp4-dark"
-        isOpen={error != null}
-        onClose={() => setError(null)}
+        className={darkThemeClass}
+        isOpen={errors.length > 0}
+        onClose={() => dispatch(clearErrors())}
         title="Mercury - Error"
         icon="error"
       >
         <DialogBody>
-          <p>{error}</p>
+          <p>{errors[0]}</p>
         </DialogBody>
         <DialogFooter
           actions={
             <Button
               intent="primary"
               text="Close"
-              onClick={() => setError(null)}
+              onClick={() => dispatch(clearErrors())}
             />
           }
         />

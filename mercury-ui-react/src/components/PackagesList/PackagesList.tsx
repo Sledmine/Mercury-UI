@@ -2,9 +2,10 @@ import React from "react"
 import "./PackagesList.css"
 import { Button, Card, Elevation, Tag, InputGroup } from "@blueprintjs/core"
 import { Icon } from "@blueprintjs/core"
-import { useSelector } from "react-redux"
-import { selectTheme } from "../../redux/slices/appSlice"
+import { useDispatch, useSelector } from "react-redux"
+import { pushError, selectTheme, setIsLoading } from "../../redux/slices/appSlice"
 import MercuryPackage from "../../types/MercuryPackage"
+import mercury from "../../mercury"
 
 interface PackageListProps {
   packages?: MercuryPackage[]
@@ -13,6 +14,46 @@ interface PackageListProps {
 export const PackagesList: React.FC<PackageListProps> = ({ packages = [] }) => {
   const currentTheme = useSelector(selectTheme)
   const [searchTerm, setSearchTerm] = React.useState("")
+  const dispatch = useDispatch()
+
+  const install = async (label: string) => {
+    try {
+      dispatch(setIsLoading(true))
+      await mercury.install(label)
+      dispatch(setIsLoading(false))
+    } catch (error) {
+      dispatch(setIsLoading(false))
+      console.error(error)
+    }
+  }
+
+  const update = async (label: string) => {
+    try {
+      dispatch(setIsLoading(true))
+      const { isUpdated, stdOut } = await mercury.update(label)
+      if (!isUpdated) {
+        dispatch(pushError(stdOut))
+      }
+      dispatch(setIsLoading(false))
+    } catch (error) {
+      dispatch(setIsLoading(false))
+      console.error(error)
+    }
+  }
+
+  const remove = async (label: string) => {
+    try {
+      dispatch(setIsLoading(true))
+      const { isRemoved, stdOut } = await mercury.remove(label)
+      dispatch(setIsLoading(false))
+      if (!isRemoved) {
+        dispatch(pushError(stdOut))
+      }
+    } catch (error) {
+      dispatch(setIsLoading(false))
+      console.error(error)
+    }
+  }
 
   return (
     <>
@@ -42,9 +83,28 @@ export const PackagesList: React.FC<PackageListProps> = ({ packages = [] }) => {
             <h3>Version: {pack.version}</h3>
             <p>{pack.description}</p>
             <div>
-              {pack.mirrors && <Button icon="cloud-download">Install</Button>}
-              {pack.files && <Button icon="refresh">Update</Button>}{" "}
-              {pack.files && <Button intent="danger" icon="delete">Remove</Button>}
+              {pack.mirrors && (
+                <Button
+                  icon="cloud-download"
+                  onClick={() => install(pack.label)}
+                >
+                  Install
+                </Button>
+              )}
+              {pack.files && (
+                <Button icon="refresh" onClick={() => update(pack.label)}>
+                  Update
+                </Button>
+              )}{" "}
+              {pack.files && (
+                <Button
+                  intent="danger"
+                  icon="delete"
+                  onClick={() => remove(pack.label)}
+                >
+                  Remove
+                </Button>
+              )}
             </div>
           </Card>
         ))}
