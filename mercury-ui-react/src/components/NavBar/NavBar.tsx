@@ -21,8 +21,7 @@ export const NavBar = () => {
       style={{
         // Make this bar sticky
         position: "sticky",
-        top: 0,
-        zIndex: 1,
+        top: 0
       }}
     >
       <NavbarGroup align="left">
