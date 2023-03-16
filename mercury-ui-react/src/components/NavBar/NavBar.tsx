@@ -15,13 +15,14 @@ export const NavBar = () => {
   const currentTheme = useSelector(selectTheme)
   const dispatch = useDispatch()
   const toggledTheme = currentTheme === "light" ? "dark" : "light"
+  const version = "1.0.0"
 
   return (
     <Navbar
       style={{
         // Make this bar sticky
         position: "sticky",
-        top: 0
+        top: 0,
       }}
     >
       <NavbarGroup align="left">
@@ -47,6 +48,8 @@ export const NavBar = () => {
           onClick={() => dispatch(setTheme(toggledTheme))}
           text={currentTheme === "light" ? "Dark Theme" : "Light Theme"}
         />
+        <NavbarDivider />
+        <small>v{version}</small>
       </NavbarGroup>
     </Navbar>
   )
