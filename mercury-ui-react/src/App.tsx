@@ -36,6 +36,7 @@ function App() {
   const [packages, setPackages] = React.useState([] as MercuryPackage[])
   const currentPage = useSelector(selectPage)
   const errors = useSelector(selectErrors)
+  const [forceUpdate, setForceUpdate] = React.useState(false)
 
   useEffect(() => {
     const getPackages = async () => {
@@ -60,7 +61,7 @@ function App() {
       dispatch(setIsLoading(false))
     }
     getPackages()
-  }, [currentPage])
+  }, [currentPage, forceUpdate])
 
   return (
     <div className={`App ${darkThemeClass}`}>
@@ -98,7 +99,10 @@ function App() {
       </Overlay>
       <NavBar />
       <div>
-        <PackagesList packages={packages} />
+        <PackagesList
+          packages={packages}
+          triggerUpdate={() => setForceUpdate(!forceUpdate)}
+        />
       </div>
     </div>
   )

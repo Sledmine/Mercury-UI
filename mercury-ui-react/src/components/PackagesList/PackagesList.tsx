@@ -1,17 +1,21 @@
 import React from "react"
-import "./PackagesList.css"
-import { Button, Card, Elevation, Tag, InputGroup } from "@blueprintjs/core"
+import { Button, Card, Tag, InputGroup } from "@blueprintjs/core"
 import { Icon } from "@blueprintjs/core"
 import { useDispatch, useSelector } from "react-redux"
-import { pushError, selectTheme, setIsLoading } from "../../redux/slices/appSlice"
+import {
+  pushError,
+  selectTheme,
+  setIsLoading,
+} from "../../redux/slices/appSlice"
 import MercuryPackage from "../../types/MercuryPackage"
 import mercury from "../../mercury"
 
 interface PackageListProps {
-  packages?: MercuryPackage[]
+  packages?: MercuryPackage[],
+  triggerUpdate?: Function
 }
 
-export const PackagesList: React.FC<PackageListProps> = ({ packages = [] }) => {
+export const PackagesList: React.FC<PackageListProps> = ({ packages = [], triggerUpdate }) => {
   const currentTheme = useSelector(selectTheme)
   const [searchTerm, setSearchTerm] = React.useState("")
   const dispatch = useDispatch()
@@ -19,10 +23,19 @@ export const PackagesList: React.FC<PackageListProps> = ({ packages = [] }) => {
   const install = async (label: string) => {
     try {
       dispatch(setIsLoading(true))
-      await mercury.install(label)
+      const { isInstalled, stdOut } = await mercury.install(label)
       dispatch(setIsLoading(false))
+      if (!isInstalled) {
+        dispatch(pushError(stdOut))
+      } else {
+        if (triggerUpdate) {
+          triggerUpdate()
+        }
+      }
     } catch (error) {
       dispatch(setIsLoading(false))
+      //@ts-ignore
+      dispatch(pushError(error.message))
       console.error(error)
     }
   }
@@ -31,12 +44,18 @@ export const PackagesList: React.FC<PackageListProps> = ({ packages = [] }) => {
     try {
       dispatch(setIsLoading(true))
       const { isUpdated, stdOut } = await mercury.update(label)
+      dispatch(setIsLoading(false))
       if (!isUpdated) {
         dispatch(pushError(stdOut))
+      } else {
+        if (triggerUpdate) {
+          triggerUpdate()
+        }
       }
-      dispatch(setIsLoading(false))
     } catch (error) {
       dispatch(setIsLoading(false))
+      //@ts-ignore
+      dispatch(pushError(error.message))
       console.error(error)
     }
   }
@@ -48,9 +67,15 @@ export const PackagesList: React.FC<PackageListProps> = ({ packages = [] }) => {
       dispatch(setIsLoading(false))
       if (!isRemoved) {
         dispatch(pushError(stdOut))
+      } else {
+        if (triggerUpdate) {
+          triggerUpdate()
+        }
       }
     } catch (error) {
       dispatch(setIsLoading(false))
+      //@ts-ignore
+      dispatch(pushError(error.message))
       console.error(error)
     }
   }
