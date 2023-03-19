@@ -28,11 +28,12 @@ import {
   Overlay,
   Spinner,
 } from "@blueprintjs/core"
+import { BrowserTuner } from "./components/BrowserTuner/BrowserTuner"
 
 function App() {
   const dispatch = useDispatch()
   const isDarkThemeEnabled = useSelector(selectTheme) === "dark"
-  const darkThemeClass = isDarkThemeEnabled ? "bp4-dark" : ""
+  const themeClass = isDarkThemeEnabled ? "bp4-dark" : ""
   const isLoading = useSelector(selectIsLoading)
   const [packages, setPackages] = React.useState([] as MercuryPackage[])
   const currentPage = useSelector(selectPage)
@@ -65,9 +66,13 @@ function App() {
   }, [currentPage, forceUpdate])
 
   return (
-    <div className={`App ${darkThemeClass}`}>
+    <div
+      className={`App ${themeClass}`}
+      style={{ backgroundColor: isDarkThemeEnabled ? "#25282e" : "" }}
+    >
+      <BrowserTuner />
       <Dialog
-        className={darkThemeClass}
+        className={themeClass}
         isOpen={errors.length > 0}
         onClose={() => dispatch(clearErrors())}
         title="Mercury CLI - Message"
@@ -96,6 +101,9 @@ function App() {
           }}
         >
           <Spinner intent="primary" aria-label={"Loading..."} />
+          <p style={{ marginTop: 20 }} className={`${themeClass}`}>
+            Loading...
+          </p>
         </div>
       </Overlay>
       <NavBar />

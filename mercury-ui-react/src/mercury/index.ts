@@ -9,9 +9,7 @@ const mercury = {
   fetch: async () => {
     const { exitCode, stdOut } = await os.execCommand("mercury fetch --json")
     if (exitCode !== 0) {
-      throw new Error(
-        "Failed to fetch packages, make sure Mercury is installed"
-      )
+      throw new Error(stdOut || "Failed to fetch packages, check if mercury is installed")
     }
     const data = JSON.parse(stdOut)
     return Object.keys(data).map((key) => data[key]) as MercuryPackage[]
@@ -40,6 +38,10 @@ const mercury = {
       return []
     }
   },
+  version: async () => {
+    const { stdOut } = await os.execCommand("mercury -v")
+    return stdOut
+  }
 }
 
 export default mercury
