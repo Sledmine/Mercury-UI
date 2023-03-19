@@ -37,7 +37,6 @@ export const appSlice = createSlice({
       errors: [...state.errors, action.payload],
     }),
     clearErrors: (state) => {
-      console.log("clearErrors")
       return ({ ...state, errors: [] })
     },
   },

@@ -70,7 +70,7 @@ function App() {
         className={darkThemeClass}
         isOpen={errors.length > 0}
         onClose={() => dispatch(clearErrors())}
-        title="Mercury - Error"
+        title="Mercury CLI - Message"
         icon="error"
       >
         <DialogBody>

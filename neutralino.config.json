@@ -26,7 +26,7 @@
     "resourcesPath": "/mercury-ui-react/build/",
     "extensionsPath": "/extensions/",
     "clientLibrary": "/mercury-ui-react/public/neutralino.js",
-    "binaryVersion": "4.10.0",
+    "binaryVersion": "4.11.0",
     "clientVersion": "3.8.2",
     "frontendLibrary" : {
       "patchFile": "/mercury-ui-react/public/index.html",
