@@ -29,8 +29,10 @@ import {
   Spinner,
 } from "@blueprintjs/core"
 import { BrowserTuner } from "./components/BrowserTuner/BrowserTuner"
+import Convert from "ansi-to-html"
 
 function App() {
+  const convert = new Convert()
   const dispatch = useDispatch()
   const isDarkThemeEnabled = useSelector(selectTheme) === "dark"
   const themeClass = isDarkThemeEnabled ? "bp4-dark" : ""
@@ -46,8 +48,8 @@ function App() {
         dispatch(setIsLoading(true))
         let packages = []
         if (currentPage === "available") {
-          const installedPackages = await mercury.list()
           packages = await mercury.fetch()
+          const installedPackages = await mercury.list()
           packages = packages.filter(
             (pack) => !installedPackages.find((p) => p.name === pack.name)
           )
@@ -79,7 +81,11 @@ function App() {
         icon="error"
       >
         <DialogBody>
-          <p>{errors[0]}</p>
+          <div
+            className={themeClass}
+            style={{ whiteSpace: "pre-wrap" }}
+            dangerouslySetInnerHTML={{ __html: convert.toHtml(errors[0] || "") }}
+          />
         </DialogBody>
         <DialogFooter
           actions={
