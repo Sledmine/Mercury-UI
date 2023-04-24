@@ -35,7 +35,8 @@ const mercury = {
   list: async () => {
     const { exitCode, stdOut } = await os.execCommand("mercury list --json")
     if (exitCode !== 0) {
-      throw new Error(noANSI(stdOut) || "Failed to list packages")
+      //throw new Error(noANSI(stdOut) || "Failed to list packages")
+      return []
     }
     const data = JSON.parse(stdOut)
     return Object.keys(data).map((key) => data[key]) as MercuryPackage[]
