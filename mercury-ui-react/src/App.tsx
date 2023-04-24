@@ -30,6 +30,8 @@ import {
 } from "@blueprintjs/core"
 import { BrowserTuner } from "./components/BrowserTuner/BrowserTuner"
 import Convert from "ansi-to-html"
+import { DialogMessage } from "./components/DialogMessage/DialogMessage"
+import { ConsoleView } from "./components/ConsoleView/ConsoleView"
 
 function App() {
   const convert = new Convert()
@@ -73,30 +75,7 @@ function App() {
       style={{ backgroundColor: isDarkThemeEnabled ? "#25282e" : "" }}
     >
       <BrowserTuner />
-      <Dialog
-        className={themeClass}
-        isOpen={errors.length > 0}
-        onClose={() => dispatch(clearErrors())}
-        title="Mercury CLI - Message"
-        icon="error"
-      >
-        <DialogBody>
-          <div
-            className={themeClass}
-            style={{ whiteSpace: "pre-wrap" }}
-            dangerouslySetInnerHTML={{ __html: convert.toHtml(errors[0] || "") }}
-          />
-        </DialogBody>
-        <DialogFooter
-          actions={
-            <Button
-              intent="primary"
-              text="Close"
-              onClick={() => dispatch(clearErrors())}
-            />
-          }
-        />
-      </Dialog>
+      <DialogMessage />
       <Overlay isOpen={isLoading} shouldReturnFocusOnClose>
         <div
           style={{

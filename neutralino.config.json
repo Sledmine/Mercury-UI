@@ -8,8 +8,8 @@
   "enableNativeAPI": true,
   "nativeAllowList": [
     "app.*",
-    "filesystem.*",
-    "os.*"
+    "os.execCommand",
+    "os.spawnProcess"
   ],
   "modes": {
     "window": {
