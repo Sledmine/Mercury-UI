@@ -9,7 +9,8 @@
   "nativeAllowList": [
     "app.*",
     "os.execCommand",
-    "os.spawnProcess"
+    "os.spawnProcess",
+    "os.updateSpawnedProcess"
   ],
   "modes": {
     "window": {
