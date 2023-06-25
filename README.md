@@ -17,4 +17,5 @@ yarn build
 cd ..
 neu run
 neu run --frontend-lib-dev
+neu run --frontend-lib-dev -- --window-enable-inspector
 ```
