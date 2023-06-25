@@ -6,7 +6,8 @@ interface AppState {
   theme: "light" | "dark"
   page: "available" | "installed"
   isLoading: boolean
-  errors: string[]
+  errors: string[],
+  command: string | null
 }
 
 const initialState: AppState = {
@@ -14,6 +15,7 @@ const initialState: AppState = {
   page: "available",
   isLoading: false,
   errors: [],
+  command: null
 }
 
 export const appSlice = createSlice({
@@ -39,14 +41,19 @@ export const appSlice = createSlice({
     clearErrors: (state) => {
       return ({ ...state, errors: [] })
     },
+    setCommand: (state, action: PayloadAction<string | null>) => ({
+      ...state,
+      command: action.payload,
+    }),
   },
 })
 
-export const { setTheme, setPage, setIsLoading, pushError, clearErrors } =
+export const { setTheme, setPage, setIsLoading, pushError, clearErrors, setCommand } =
   appSlice.actions
 export const selectTheme = (state: RootState) => state.app.theme
 export const selectPage = (state: RootState) => state.app.page
 export const selectIsLoading = (state: RootState) => state.app.isLoading
 export const selectErrors = (state: RootState) => state.app.errors
+export const selectCommand = (state: RootState) => state.app.command
 
 export default appSlice.reducer

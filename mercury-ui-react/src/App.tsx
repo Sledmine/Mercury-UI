@@ -14,10 +14,12 @@ import { useDispatch, useSelector } from "react-redux"
 import {
   clearErrors,
   pushError,
+  selectCommand,
   selectErrors,
   selectIsLoading,
   selectPage,
   selectTheme,
+  setCommand,
   setIsLoading,
 } from "./redux/slices/appSlice"
 import {
@@ -43,6 +45,7 @@ function App() {
   const currentPage = useSelector(selectPage)
   const errors = useSelector(selectErrors)
   const [forceUpdate, setForceUpdate] = React.useState(false)
+  const command = useSelector(selectCommand)
 
   useEffect(() => {
     const getPackages = async () => {
@@ -75,6 +78,15 @@ function App() {
       style={{ backgroundColor: isDarkThemeEnabled ? "#25282e" : "" }}
     >
       <BrowserTuner />
+      <ConsoleView
+        command={command}
+        onCommandFinished={() => {
+          setForceUpdate(!forceUpdate)
+        }}
+        onClose={() => {
+          dispatch(setCommand(null))
+        }}
+      />
       <DialogMessage />
       <Overlay isOpen={isLoading} shouldReturnFocusOnClose>
         <div

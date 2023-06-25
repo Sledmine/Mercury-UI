@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux"
 import {
   pushError,
   selectTheme,
+  setCommand,
   setIsLoading,
 } from "../../redux/slices/appSlice"
 import MercuryPackage from "../../types/MercuryPackage"
@@ -21,23 +22,7 @@ export const PackagesList: React.FC<PackageListProps> = ({ packages = [], trigge
   const dispatch = useDispatch()
 
   const install = async (label: string) => {
-    try {
-      dispatch(setIsLoading(true))
-      const { isInstalled, stdOut } = await mercury.install(label)
-      dispatch(setIsLoading(false))
-      if (!isInstalled) {
-        dispatch(pushError(stdOut))
-      } else {
-        if (triggerUpdate) {
-          triggerUpdate()
-        }
-      }
-    } catch (error) {
-      dispatch(setIsLoading(false))
-      //@ts-ignore
-      dispatch(pushError(error.message))
-      console.error(error)
-    }
+    dispatch(setCommand(`mercury install ${label}`))
   }
 
   const update = async (label: string) => {
