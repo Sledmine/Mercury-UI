@@ -10,7 +10,9 @@
     "app.*",
     "os.execCommand",
     "os.spawnProcess",
-    "os.updateSpawnedProcess"
+    "os.updateSpawnedProcess",
+    "os.getEnv",
+    "os.showFolderDialog"
   ],
   "modes": {
     "window": {
