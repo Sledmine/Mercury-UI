@@ -12,11 +12,14 @@ import MercuryPackage from "../../types/MercuryPackage"
 import mercury from "../../mercury"
 
 interface PackageListProps {
-  packages?: MercuryPackage[],
+  packages?: MercuryPackage[]
   triggerUpdate?: Function
 }
 
-export const PackagesList: React.FC<PackageListProps> = ({ packages = [], triggerUpdate }) => {
+export const PackagesList: React.FC<PackageListProps> = ({
+  packages = [],
+  triggerUpdate,
+}) => {
   const currentTheme = useSelector(selectTheme)
   const [searchTerm, setSearchTerm] = React.useState("")
   const dispatch = useDispatch()
@@ -67,18 +70,20 @@ export const PackagesList: React.FC<PackageListProps> = ({ packages = [], trigge
 
   return (
     <>
-      <InputGroup
-        value={searchTerm}
-        onChange={(e) => {
-          setSearchTerm(e.target.value.toLowerCase())
-        }}
-        leftIcon="search"
-        placeholder="Search packages..."
-        large
-        style={{
-          backgroundColor: currentTheme === "dark" ? "#1f2329" : undefined,
-        }}
-      />
+      <div style={{ position: "sticky", top: 50 }}>
+        <InputGroup
+          value={searchTerm}
+          onChange={(e) => {
+            setSearchTerm(e.target.value.toLowerCase())
+          }}
+          leftIcon="search"
+          placeholder="Search packages..."
+          large
+          style={{
+            backgroundColor: currentTheme === "dark" ? "#1f2329" : undefined,
+          }}
+        />
+      </div>
       {packages
         .filter((pack) => {
           return pack.name.toLowerCase().includes(searchTerm)

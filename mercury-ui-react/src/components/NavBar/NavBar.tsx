@@ -6,20 +6,16 @@ import {
   NavbarGroup,
   NavbarHeading,
   Classes,
+  Tab, Tabs
 } from "@blueprintjs/core"
 import "./NavBar.css"
 import { useDispatch, useSelector } from "react-redux"
 import { selectTheme, setPage, setTheme } from "../../redux/slices/appSlice"
-import mercury from "../../mercury"
 
 export const NavBar = () => {
   const currentTheme = useSelector(selectTheme)
   const dispatch = useDispatch()
   const toggledTheme = currentTheme === "light" ? "dark" : "light"
-  const [version, setVersion] = useState("")
-  useEffect(() => {
-    mercury.version().then((v) => setVersion(v || "unknown"))
-  }, [])
 
   return (
     <Navbar
@@ -52,8 +48,6 @@ export const NavBar = () => {
           onClick={() => dispatch(setTheme(toggledTheme))}
           text={currentTheme === "light" ? "Dark Theme" : "Light Theme"}
         />
-        <NavbarDivider />
-        <small>v{version || process.env.REACT_APP_VERSION}</small>
       </NavbarGroup>
     </Navbar>
   )

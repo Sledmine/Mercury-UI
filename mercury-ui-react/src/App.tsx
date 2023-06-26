@@ -34,6 +34,7 @@ import { BrowserTuner } from "./components/BrowserTuner/BrowserTuner"
 import Convert from "ansi-to-html"
 import { DialogMessage } from "./components/DialogMessage/DialogMessage"
 import { ConsoleView } from "./components/ConsoleView/ConsoleView"
+import StatusBar from "./components/StatusBar/StatusBar"
 
 function App() {
   const convert = new Convert()
@@ -110,6 +111,7 @@ function App() {
           triggerUpdate={() => setForceUpdate(!forceUpdate)}
         />
       </div>
+      <StatusBar/>
     </div>
   )
 }
