@@ -49,21 +49,16 @@ const mercury = {
     return stdOut
   },
   config: async (key?: string, value?: string) => {
-    let exitCode = 0
-    let stdOut
     if (key) {
-      const result = await os.execCommand(
+      const { exitCode, stdOut } = await os.execCommand(
         `mercury config ${key} ${value} --json`
       )
-      stdOut = result.stdOut
-      exitCode = result.exitCode
+      if (exitCode !== 0) {
+        return null
+      }
+      return true
     }
-    const result = await os.execCommand("mercury config --json")
-    exitCode = result.exitCode
-    stdOut = result.stdOut
-    if (exitCode !== 0) {
-      return null
-    }
+    const { exitCode, stdOut } = await os.execCommand("mercury config --json")
     return JSON.parse(stdOut)
   },
 }

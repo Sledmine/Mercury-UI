@@ -9,7 +9,7 @@ import {
 import { init, os } from "@neutralinojs/lib"
 import mercury from "../../mercury"
 import { useDispatch } from "react-redux"
-import { setCommand } from "../../redux/slices/appSlice"
+import { pushError, setCommand } from "../../redux/slices/appSlice"
 
 export const StatusBar = () => {
   const [gamePath, setGamePath] = useState("")
@@ -37,7 +37,7 @@ export const StatusBar = () => {
     const getPath = async () => {
       const pathFromEnv = await os.getEnv("HALO_CE_PATH")
       if (pathFromEnv) {
-        setGamePath(pathFromEnv)
+        setGamePath(`${pathFromEnv} (from HALO_CE_PATH)`)
         return
       }
       if (config?.game?.path) {
@@ -52,7 +52,7 @@ export const StatusBar = () => {
       style={{
         position: "sticky",
         bottom: 0,
-        marginTop: "auto"
+        marginTop: "auto",
       }}
     >
       <NavbarGroup align="left">
@@ -68,10 +68,16 @@ export const StatusBar = () => {
             const path = await os.showFolderDialog("Select game path")
             if (path) {
               //dispatch(setCommand(`mercury config game.path ${path}`))
-              const result = await mercury.config("game.path", path)
+              const result = await mercury.config("game.path", `"${path}"`)
               if (result) {
                 // Refresh application
                 window.location.reload()
+              } else {
+                dispatch(
+                  pushError(
+                    "Failed to set game path, verify you have permissions to write to the config file."
+                  )
+                )
               }
             }
           }}
