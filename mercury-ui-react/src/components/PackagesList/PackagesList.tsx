@@ -84,7 +84,13 @@ export const PackagesList: React.FC<PackageListProps> = ({
           }}
         />
       </div>
-      {packages
+      <div style={{
+        height: "calc(100% - 140px)",
+        width: "100%",
+        position: "absolute",
+        overflowY: "scroll",
+      }}>
+        {packages
         .filter((pack) => {
           return pack.name.toLowerCase().includes(searchTerm)
         })
@@ -123,6 +129,7 @@ export const PackagesList: React.FC<PackageListProps> = ({
             </div>
           </Card>
         ))}
+      </div>
     </>
   )
 }
