@@ -12,7 +12,7 @@ const mercury = {
     if (exitCode !== 0) {
       throw new Error(
         noANSI(stdOut) ||
-          "Failed to fetch packages, check if mercury is installed"
+          "Failed to fetch packages, check if mercury is available trough PATH"
       )
     }
     const data = JSON.parse(stdOut)

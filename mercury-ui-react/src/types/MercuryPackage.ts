@@ -10,7 +10,8 @@ export interface MercuryPackageManifest {
   name: string
   label: string
   files: File[]
-  manifestVersion: string
+  manifestVersion: string,
+  image?: string
 }
 
 export interface MercuryFile {
