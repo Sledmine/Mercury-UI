@@ -9,7 +9,7 @@ import {
 import { os, app } from "@neutralinojs/lib"
 import mercury from "../../mercury"
 import { useDispatch } from "react-redux"
-import { pushError, setCommand } from "../../redux/slices/appSlice"
+import { pushError, setCommand, setIsLoading } from "../../redux/slices/appSlice"
 
 export const StatusBar = () => {
   const [gamePath, setGamePath] = useState("")
@@ -63,10 +63,12 @@ export const StatusBar = () => {
           icon="download"
           text="Check for updates"
           onClick={async () => {
+            dispatch(setIsLoading(true))
             const result = await mercury.latest()
+            dispatch(setIsLoading(false))
             if (!result.isLatest) {
-              // Refresh application
-              app.restartProcess()
+              // Exit application
+              app.exit()
             } else {
               dispatch(pushError("You are already on the latest version."))
             }
