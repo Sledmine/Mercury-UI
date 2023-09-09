@@ -6,7 +6,7 @@ import {
   NavbarGroup,
   NavbarHeading,
 } from "@blueprintjs/core"
-import { init, os } from "@neutralinojs/lib"
+import { os, app } from "@neutralinojs/lib"
 import mercury from "../../mercury"
 import { useDispatch } from "react-redux"
 import { pushError, setCommand } from "../../redux/slices/appSlice"
@@ -56,11 +56,22 @@ export const StatusBar = () => {
       }}
     >
       <NavbarGroup align="left">
-        <NavbarHeading>
-          <b>Game Path:</b> {gamePath ? gamePath : "Not configured"}
-        </NavbarHeading>
+          <b>Game Path: </b> {gamePath ? gamePath : "Not configured"}
       </NavbarGroup>
       <NavbarGroup align="right">
+        <Button
+          icon="download"
+          text="Check for updates"
+          onClick={async () => {
+            const result = await mercury.latest()
+            if (!result.isLatest) {
+              // Refresh application
+              app.restartProcess()
+            } else {
+              dispatch(pushError("You are already on the latest version."))
+            }
+          }}
+        />
         <Button
           icon="cog"
           text="Game path"

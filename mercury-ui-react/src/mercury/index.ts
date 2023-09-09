@@ -61,6 +61,10 @@ const mercury = {
     const { exitCode, stdOut } = await os.execCommand("mercury config --json")
     return JSON.parse(stdOut)
   },
+  latest: async () => {
+    const { exitCode, stdOut } = await os.execCommand("mercury latest")
+    return { isLatest: exitCode === 0, stdOut: noANSI(stdOut) }
+  }
 }
 
 export default mercury
