@@ -6,16 +6,23 @@ import {
   NavbarGroup,
   NavbarHeading,
   Classes,
-  Tab, Tabs
+  Tab,
+  Tabs,
 } from "@blueprintjs/core"
 import "./NavBar.css"
 import { useDispatch, useSelector } from "react-redux"
-import { selectTheme, setPage, setTheme } from "../../redux/slices/appSlice"
+import {
+  selectPage,
+  selectTheme,
+  setPage,
+  setTheme,
+} from "../../redux/slices/appSlice"
 
 export const NavBar = () => {
   const currentTheme = useSelector(selectTheme)
   const dispatch = useDispatch()
   const toggledTheme = currentTheme === "light" ? "dark" : "light"
+  const currentPage = useSelector(selectPage)
 
   return (
     <Navbar
@@ -29,13 +36,17 @@ export const NavBar = () => {
         <NavbarHeading>Mercury UI</NavbarHeading>
         <NavbarDivider />
         <Button
-          className={Classes.MINIMAL}
+          //className={Classes.MINIMAL}
+          large
+          intent={currentPage === "available" ? "primary" : "none"}
           onClick={() => dispatch(setPage("available"))}
           icon="globe-network"
           text="Available"
         />
         <Button
-          className={Classes.MINIMAL}
+          //className={Classes.MINIMAL}
+          large
+          intent={currentPage === "installed" ? "primary" : "none"}
           onClick={() => dispatch(setPage("installed"))}
           icon="box"
           text="Installed"
