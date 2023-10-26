@@ -21,6 +21,7 @@ import {
   selectTheme,
   setCommand,
   setIsLoading,
+  setLatestPackages,
 } from "./redux/slices/appSlice"
 import {
   Button,
@@ -55,6 +56,7 @@ function App() {
         let packages = []
         if (currentPage === "available") {
           packages = await mercury.fetch()
+          dispatch(setLatestPackages(packages))
           const installedPackages = await mercury.list()
           packages = packages.filter(
             (pack) => !installedPackages.find((p) => p.name === pack.name)

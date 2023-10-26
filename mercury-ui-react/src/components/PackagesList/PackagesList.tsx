@@ -4,6 +4,7 @@ import { Icon } from "@blueprintjs/core"
 import { useDispatch, useSelector } from "react-redux"
 import {
   pushError,
+  selectLatestPackages,
   selectTheme,
   setCommand,
   setIsLoading,
@@ -23,6 +24,7 @@ export const PackagesList: React.FC<PackageListProps> = ({
   const currentTheme = useSelector(selectTheme)
   const [searchTerm, setSearchTerm] = React.useState("")
   const dispatch = useDispatch()
+  const latestPackages = useSelector(selectLatestPackages)
 
   const install = async (label: string) => {
     dispatch(setCommand(`mercury install ${label}`))
@@ -104,7 +106,10 @@ export const PackagesList: React.FC<PackageListProps> = ({
                     style={{
                       width: "128px",
                       height: "128px",
-                      backgroundImage: `url(${pack.image})`,
+                      backgroundImage: `url(${
+                        pack.image ||
+                        latestPackages.find((p) => p.name === pack.name)?.image
+                      })`,
                       //backgroundSize: "90%",
                       backgroundSize: "cover",
                       backgroundRepeat: "no-repeat",
