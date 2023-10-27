@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from "react"
-import { Button, Dialog, DialogBody, DialogFooter } from "@blueprintjs/core"
+import {
+  Button,
+  Dialog,
+  DialogBody,
+  DialogFooter,
+  Spinner,
+} from "@blueprintjs/core"
 import Convert from "ansi-to-html"
-import { useDispatch, useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 import { selectTheme } from "../../redux/slices/appSlice"
 import { os, events } from "@neutralinojs/lib"
 
-// Ensure just on event will be used, if we assign this later multiple events will be triggered
+// Ensure just one event will be used, if we assign eventer later multiple events will be triggered
 let currentProcessId: number | null
 let currentProcessPID = 0
 let onSpawnedProcess = (evt: CustomEvent) => {}
@@ -19,10 +25,10 @@ export const ConsoleView: React.FC<{
   onClose?: () => void
 }> = ({ command, onCommandFinished, onClose }) => {
   const convert = new Convert()
-  const dispatch = useDispatch()
   const isDarkThemeEnabled = useSelector(selectTheme) === "dark"
   const themeClass = isDarkThemeEnabled ? "bp4-dark" : ""
   const [terminalOutput, setTerminalOutput] = useState("")
+  const [exitCode, setExitCode] = useState(0)
 
   const printMessage = (data: string) => {
     // If we have a return carriage, replace last line
@@ -32,12 +38,13 @@ export const ConsoleView: React.FC<{
         lines[lines.length - 1] = data
         return lines.join("\n")
       }
-      return prev + data
+      return `${prev}${data}`
     })
   }
 
   const runCommand = async () => {
     if (!command) return
+    setExitCode(1)
     const { id, pid } = await os.spawnProcess(command)
     currentProcessId = id
     currentProcessPID = pid
@@ -48,6 +55,8 @@ export const ConsoleView: React.FC<{
     try {
       //console.log("Canceling process", currentProcessPID)
       await os.updateSpawnedProcess(currentProcessId, "exit")
+      console.log("Process canceled")
+      currentProcessId = null
     } catch (error) {
       console.error(error)
     }
@@ -74,24 +83,37 @@ export const ConsoleView: React.FC<{
         switch (evt.detail.action) {
           case "stdOut":
             printMessage(evt.detail.data)
-            //console.log(evt.detail.data)
+            //console.log(JSON.stringify(evt.detail.data))
             break
           case "stdErr":
             printMessage(evt.detail.data)
+            //console.log(JSON.stringify(evt.detail.data))
             //console.error(evt.detail.data)
             break
           case "exit":
-            //console.log(`Ping process terminated with exit code: ${evt.detail.data}`)
+            console.log(`Process terminated with exit code: ${evt.detail.data}`)
             currentProcessId = null
+            setExitCode(evt.detail.data)
             if (onCommandFinished) {
               onCommandFinished()
             }
+            break
+          default:
+            console.log("Unknown event", evt.detail)
             break
         }
       }
     }
     if (command) runCommand()
   }, [command])
+
+  // Scroll to bottom when terminal output changes
+  useEffect(() => {
+    const consoleElement = document.getElementById("console")
+    if (consoleElement) {
+      consoleElement.scrollTo(0, consoleElement.scrollHeight)
+    }
+  }, [terminalOutput])
 
   return (
     <>
@@ -104,11 +126,20 @@ export const ConsoleView: React.FC<{
         title="Mercury Console - View"
         canOutsideClickClose={false}
         icon="console"
+        style={{ overflow: "hidden" }}
       >
         <DialogBody>
           <div
+            id="console"
             className={themeClass}
-            style={{ whiteSpace: "pre-wrap" }}
+            // For some weird CSS reason if this div does not have a maxHeight, app will crash
+            // ONLY when the UI is of really small size, lol
+            style={{
+              whiteSpace: "pre-wrap",
+              maxHeight: "300px",
+              overflowY: "scroll",
+              scrollBehavior: "smooth",
+            }}
             dangerouslySetInnerHTML={{
               __html: convert.toHtml(terminalOutput || ""),
             }}
@@ -117,14 +148,28 @@ export const ConsoleView: React.FC<{
         <DialogFooter
           actions={
             <Button
-              intent="danger"
-              text="CLOSE"
+              intent={exitCode === 0 ? "success" : "danger"}
+              text={exitCode === 0 ? "Close" : "Cancel"}
               onClick={() => {
                 cleanUp()
               }}
             />
           }
-        />
+        >
+          {currentProcessId !== null ? (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                position: "relative",
+              }}
+            >
+              <Spinner size={32} />
+              <div style={{ width: "10px" }} />
+              Mercury is running, please wait...
+            </div>
+          ) : null}
+        </DialogFooter>
       </Dialog>
     </>
   )

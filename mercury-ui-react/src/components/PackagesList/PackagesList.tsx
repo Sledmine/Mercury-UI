@@ -30,7 +30,7 @@ export const PackagesList: React.FC<PackageListProps> = ({
     dispatch(setCommand(`mercury install ${label}`))
   }
 
-  const update = async (label: string) => {
+  const updateByCLI = async (label: string) => {
     try {
       dispatch(setIsLoading(true))
       const { isUpdated, stdOut } = await mercury.update(label)
@@ -48,6 +48,10 @@ export const PackagesList: React.FC<PackageListProps> = ({
       dispatch(pushError(error.message))
       console.error(error)
     }
+  }
+
+  const update = async (label: string) => {
+    dispatch(setCommand(`mercury update ${label}`))
   }
 
   const remove = async (label: string) => {
