@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -23,10 +24,21 @@ html, body {
                                   supported by Chrome, Edge, Opera and Firefox */
 }
 
+/* Prevent outline on click in elements, as it looks ugly in native like apps */
+button:focus {
+  outline: none;
+}
+a:focus {
+  outline: none;
+}
+span:focus {
+  outline: none;
+}
+
 ::-webkit-scrollbar {
   height: 6px;
   width: 6px;
-  border:rgba(0, 0, 0, 0.75);
+  border: rgba(0, 0, 0, 0.75);
   background: #25282e;
 }
 
