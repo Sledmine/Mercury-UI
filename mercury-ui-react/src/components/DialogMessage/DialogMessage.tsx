@@ -20,7 +20,7 @@ export const DialogMessage = () => {
       className={themeClass}
       isOpen={errors.length > 0}
       onClose={() => dispatch(clearErrors())}
-      title="Mercury CLI - Message"
+      title="Mercury - Message"
       icon="error"
     >
       <DialogBody>
