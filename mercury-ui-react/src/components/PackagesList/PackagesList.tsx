@@ -11,6 +11,7 @@ import {
 } from "../../redux/slices/appSlice"
 import MercuryPackage from "../../types/MercuryPackage"
 import mercury from "../../mercury"
+import "./PackagesList.css"
 
 interface PackageListProps {
   packages?: MercuryPackage[]
@@ -74,6 +75,14 @@ export const PackagesList: React.FC<PackageListProps> = ({
     }
   }
 
+  const isPackageUpdatable = (pack: MercuryPackage) => {
+    const latestPackage = latestPackages.find((p) => p.name === pack.name)
+    if (!latestPackage) {
+      return false
+    }
+    return latestPackage.version > pack.version
+  }
+
   return (
     <>
       <div style={{ position: "sticky", top: 50 }}>
@@ -103,7 +112,19 @@ export const PackagesList: React.FC<PackageListProps> = ({
             return pack.name.toLowerCase().includes(searchTerm)
           })
           .map((pack) => (
-            <Card key={pack.name} interactive={true}>
+            <Card key={pack.name}>
+              <div
+                style={{
+                  display: "inline-flex",
+                  float: "right",
+                }}
+              >
+                {pack.category === "map" && isPackageUpdatable(pack) && (
+                  <Tag intent="warning">
+                    <Icon icon="warning-sign" /> Update Available
+                  </Tag>
+                )}
+              </div>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <div style={{ maxWidth: "50%" }}>
                   <div
@@ -126,11 +147,8 @@ export const PackagesList: React.FC<PackageListProps> = ({
                 </div>
                 <div style={{ paddingLeft: "28px" }}>
                   <h2>
-                    {/* <Icon icon="box" size={24} /> */}
                     <a href="#"> {pack.name}</a>{" "}
-                    {pack.category && <Tag>{pack.category}</Tag>}
-                    &nbsp;
-                    {/* <Tag intent="success">NEW</Tag> */}
+                    {pack.category && <Tag>{pack.category}</Tag>} &nbsp;
                   </h2>
                   <h3>Version: {pack.version}</h3>
                   <h4>Author: {pack.author}</h4>
@@ -144,8 +162,18 @@ export const PackagesList: React.FC<PackageListProps> = ({
                         Install
                       </Button>
                     )}
-                    {pack.files && (
-                      <Button icon="refresh" onClick={() => update(pack.label)}>
+                    {pack.files && isPackageUpdatable(pack) && (
+                      <Button
+                        intent="primary"
+                        style={{
+                          animation:
+                            pack.category === "map"
+                              ? "flashButton 3s linear 0s infinite normal forwards"
+                              : undefined,
+                        }}
+                        icon="refresh"
+                        onClick={() => update(pack.label)}
+                      >
                         Update
                       </Button>
                     )}{" "}

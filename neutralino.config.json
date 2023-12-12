@@ -13,7 +13,9 @@
     "os.spawnProcess",
     "os.updateSpawnedProcess",
     "os.getEnv",
-    "os.showFolderDialog"
+    "os.showFolderDialog",
+    "os.showOpenDialog",
+    "os.getPath"
   ],
   "modes": {
     "window": {
@@ -31,8 +33,8 @@
     "resourcesPath": "/mercury-ui-react/build/",
     "extensionsPath": "/extensions/",
     "clientLibrary": "/mercury-ui-react/public/neutralino.js",
-    "binaryVersion": "4.11.0",
-    "clientVersion": "3.8.2",
+    "binaryVersion": "4.15.0",
+    "clientVersion": "3.13.0",
     "frontendLibrary": {
       "patchFile": "/mercury-ui-react/public/index.html",
       "devUrl": "http://localhost:3000"
